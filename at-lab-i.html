@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AT-LAB I — Agustín Martínez Caram</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root { --black: #080808; --off-white: #ede9e0; --warm-mid: #9a9284; --accent: #c0a86c; --accent-dim: rgba(192,168,108,0.08); --border: rgba(237,233,224,0.1); }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--black); color: var(--off-white); font-family: 'Outfit', sans-serif; font-weight: 300; line-height: 1.65; overflow-x: hidden; }
+    body::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); opacity: 0.45; }
+    nav { display: flex; justify-content: space-between; align-items: center; padding: 2rem 3rem; border-bottom: 1px solid var(--border); position: relative; z-index: 10; }
+    .nav-logo { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--warm-mid); text-decoration: none; }
+    .nav-back { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--warm-mid); text-decoration: none; transition: color 0.3s; }
+    .nav-back:hover { color: var(--off-white); }
+    .project-hero { position: relative; z-index: 1; padding: 6rem 3rem 4rem; max-width: 1280px; margin: 0 auto; }
+    .project-tag { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; }
+    .project-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(3rem, 7vw, 8rem); font-weight: 300; line-height: 0.92; letter-spacing: -0.02em; margin-bottom: 3rem; }
+    .project-title em { font-style: italic; }
+    .meta-row { display: flex; gap: 3rem; flex-wrap: wrap; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 1.8rem 0; margin-bottom: 4rem; position: relative; }
+    .meta-row::before, .meta-row::after {
+      content: '';
+      position: absolute;
+      left: -3rem;
+      right: -3rem;
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, var(--accent) 50%, transparent 100%);
+      background-size: 40% 100%;
+      animation: lightScan 10s ease-in-out infinite;
+      opacity: 0.6;
+    }
+    .meta-row::before { top: -1px; }
+    .meta-row::after { bottom: -1px; animation-delay: 5s; }
+    @keyframes lightScan {
+      0% { background-position: -100% 0; }
+      100% { background-position: 250% 0; }
+    }
+
+    /* STAT CARD HOVER */
+    .stat-card { background: #0d0b08; padding: 2rem 1.5rem; text-align: center; transition: background 0.4s ease, box-shadow 0.4s ease; }
+    .stat-card:hover { background: #1a1508; box-shadow: inset 0 0 30px rgba(192,168,108,0.08), 0 0 0 1px rgba(192,168,108,0.2); }
+    .stat-card:hover .stat-num { text-shadow: 0 0 20px rgba(192,168,108,0.4); }
+
+    /* LAYER ICON EFFECTS */
+    .layer-icon { font-size: 1.8rem; opacity: 0.5; margin-bottom: 1rem; display: inline-block; transition: opacity 0.3s, transform 0.3s, text-shadow 0.3s; }
+    .layer-card:hover .layer-icon { opacity: 1; transform: scale(1.2); text-shadow: 0 0 12px var(--accent); }
+    .meta-item { display: flex; flex-direction: column; gap: 0.3rem; }
+    .meta-label { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--warm-mid); }
+    .meta-value { font-size: 0.88rem; color: var(--off-white); }
+    .content-wrap { position: relative; z-index: 1; max-width: 1280px; margin: 0 auto; padding: 0 3rem 6rem; }
+
+    /* HERO — heartbeat / body sensor */
+    .hero-visual { width: 100%; height: 55vh; min-height: 320px; background: #0a0906; border: 1px solid var(--border); margin-bottom: 5rem; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .heartbeat-line { position: absolute; width: 100%; height: 2px; top: 50%; transform: translateY(-50%); }
+    svg.hb { width: 100%; height: 100px; overflow: visible; }
+    .hb-path { fill: none; stroke: var(--accent); stroke-width: 1.5; opacity: 0.5; stroke-dasharray: 2000; stroke-dashoffset: 2000; animation: drawLine 3s ease forwards infinite; }
+    @keyframes drawLine { 0% { stroke-dashoffset: 2000; opacity: 0.5; } 80% { stroke-dashoffset: 0; opacity: 0.5; } 100% { stroke-dashoffset: 0; opacity: 0; } }
+    .hero-visual-label { position: absolute; bottom: 1.5rem; left: 1.5rem; font-family: 'DM Mono', monospace; font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--warm-mid); opacity: 0.4; }
+
+    .text-columns { display: grid; grid-template-columns: 1fr 2fr; gap: 5rem; margin-bottom: 5rem; }
+    .col-label { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--warm-mid); padding-top: 0.3rem; }
+    .col-content h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 400; line-height: 1.2; margin-bottom: 1.2rem; }
+    .col-content p { font-size: 0.9rem; color: var(--warm-mid); line-height: 1.8; margin-bottom: 1rem; }
+    .col-content p:last-child { margin-bottom: 0; }
+    .col-content blockquote { border-left: 2px solid var(--accent); padding-left: 1.5rem; margin: 2rem 0; font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-style: italic; color: var(--off-white); line-height: 1.5; }
+
+    .image-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin-bottom: 5rem; background: var(--border); }
+    .image-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; margin-bottom: 5rem; background: var(--border); }
+    .image-slot { background: #0d0b08; aspect-ratio: 4/3; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .image-slot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .image-slot-label { position: absolute; bottom: 0.8rem; left: 0.8rem; font-family: 'DM Mono', monospace; font-size: 0.5rem; letter-spacing: 0.1em; color: var(--warm-mid); opacity: 0.5; }
+    .placeholder-icon { font-family: 'DM Mono', monospace; font-size: 0.55rem; color: var(--warm-mid); opacity: 0.3; letter-spacing: 0.1em; }
+
+    /* INTERACTION LAYERS */
+    .layers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; margin-bottom: 5rem; background: var(--border); }
+    .layer-card { background: #0d0b08; padding: 2.5rem 2rem; }
+    .layer-title { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 400; margin-bottom: 0.8rem; }
+    .layer-desc { font-size: 0.85rem; color: var(--warm-mid); line-height: 1.7; }
+
+    /* STAT ROW */
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; margin-bottom: 5rem; background: var(--border); }
+    .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 300; color: var(--accent); display: block; margin-bottom: 0.3rem; transition: text-shadow 0.4s; }
+    .stat-label { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--warm-mid); }
+
+    .wide-image { width: 100%; height: 45vh; min-height: 280px; background: #0d0b08; border: 1px solid var(--border); margin-bottom: 5rem; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .wide-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .video-slot { width: 100%; background: #0d0b08; border: 1px solid var(--border); aspect-ratio: 16/9; margin-bottom: 5rem; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+    .video-placeholder { text-align: center; }
+    .video-placeholder .play-icon { font-size: 3rem; color: var(--warm-mid); opacity: 0.2; margin-bottom: 0.5rem; }
+    .video-placeholder p { font-family: 'DM Mono', monospace; font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--warm-mid); opacity: 0.4; }
+    .partners-row { display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center; border-top: 1px solid var(--border); padding-top: 2rem; margin-bottom: 5rem; }
+    .partners-label { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--warm-mid); }
+    .partner-badge { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; border: 1px solid var(--border); padding: 0.35rem 0.8rem; color: var(--warm-mid); border-radius: 2px; }
+    .project-nav { border-top: 1px solid var(--border); padding: 2.5rem 3rem; max-width: 1280px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .project-nav a { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--warm-mid); text-decoration: none; transition: color 0.3s; }
+    .project-nav a:hover { color: var(--off-white); }
+    @media (max-width: 768px) {
+      nav, .project-hero, .content-wrap { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .text-columns { grid-template-columns: 1fr; gap: 2rem; }
+      .layers-grid, .stats-row { grid-template-columns: 1fr 1fr; }
+      .image-grid-2, .image-grid-3 { grid-template-columns: 1fr; }
+      .project-nav { padding-left: 1.5rem; padding-right: 1.5rem; }
+    }
+    /* LIGHTBOX */
+    .lightbox-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:1000; align-items:center; justify-content:center; cursor:zoom-out; }
+    .lightbox-overlay.active { display:flex; }
+    .lightbox-overlay img { max-width:92vw; max-height:92vh; object-fit:contain; box-shadow:0 0 60px rgba(0,0,0,0.8); }
+    .lightbox-close { position:fixed; top:1.5rem; right:2rem; font-family:'DM Mono',monospace; font-size:1.2rem; color:var(--off-white); cursor:pointer; opacity:0.6; z-index:1001; }
+    .lightbox-close:hover { opacity:1; }
+    .image-slot { cursor:zoom-in; }
+    .wide-image { cursor:zoom-in; }
+  </style>
+</head>
+<body>
+  <div class="lightbox-overlay" id="lightbox">
+    <span class="lightbox-close" onclick="closeLightbox()">✕</span>
+    <img id="lightbox-img" src="" alt="" />
+  </div>
+  <nav>
+    <a href="index.html" class="nav-logo">← AMC Portfolio</a>
+    <a href="index.html" class="nav-back">All Projects</a>
+  </nav>
+
+  <section class="project-hero">
+    <p class="project-tag">04 — Art & Technology Lab · Participatory Installation · Community Research</p>
+    <h1 class="project-title">AT-LAB I —<br><em>Artistic Research<br>Intervention in<br>Healthy Living</em></h1>
+    <div class="meta-row">
+      <div class="meta-item"><span class="meta-label">Date</span><span class="meta-value">2–4 June 2023</span></div>
+      <div class="meta-item"><span class="meta-label">Location</span><span class="meta-value">Stichting Landgoed de Camping, 't Zandt, Groningen</span></div>
+      <div class="meta-item"><span class="meta-label">Participants</span><span class="meta-value">~50</span></div>
+      <div class="meta-item"><span class="meta-label">Artists</span><span class="meta-value">Nina Kopacz · Federico Murgia · Agustín Martínez</span></div>
+      <div class="meta-item"><span class="meta-label">Project</span><span class="meta-value">HLaS (Healthy Living as a Service) WP2</span></div>
+      <div class="meta-item"><span class="meta-label">Funder</span><span class="meta-value">NWO</span></div>
+    </div>
+  </section>
+
+  <div class="content-wrap">
+
+    <div class="hero-visual">
+      <div class="heartbeat-line">
+        <svg class="hb" viewBox="0 0 1200 100" preserveAspectRatio="none">
+          <path class="hb-path" d="M0,50 L200,50 L220,50 L240,10 L260,90 L280,20 L300,80 L320,50 L520,50 L540,50 L560,10 L580,90 L600,20 L620,80 L640,50 L840,50 L860,50 L880,10 L900,90 L920,20 L940,80 L960,50 L1200,50"/>
+        </svg>
+      </div>
+      <span class="hero-visual-label">Heartbeat → Movement → Light → Sound · AT-LAB I, 't Zandt 2023</span>
+    </div>
+
+    <div class="text-columns">
+      <span class="col-label">About</span>
+      <div class="col-content">
+        <h3>A space mapped through technology,<br>artistically intervened through sound,<br>light, and choreography</h3>
+        <p>
+          From the 2nd to the 4th of June 2023, inhabitants of the province of Groningen were invited to participate in Art & Technology LAB 1 at Stichting Landgoed de Camping in 't Zandt. Part of WP2 (Work Package 2) of the NWO-funded Healthy Living as a Service (HLaS) project, the AT-LAB was designed as a space mapped through technology and artistically intervened through sound, light, and choreography.
+        </p>
+        <p>
+          The lab created an optimal ground for artistic research on community building, technologically mediated interaction, digital literacy, and performative practice — bringing art and technology together in a purpose-built immersive environment open to the surrounding community.
+        </p>
+        <blockquote>
+          Around 50 participants entered the custom-built space — interacting with light, sound, and visuals directly through the movement of sensors placed on their arms, and through the sensing of their heartbeat.
+        </blockquote>
+        <p>
+          Participants controlled the movement, intensity, and parameters of the light and visuals simply by moving. Through their heartbeat, they experienced more subtle feedback in the sound and light environment. Finally, they shared thoughts on health sensors and their experience of interacting with technology — generating rich qualitative research data.
+        </p>
+      </div>
+    </div>
+
+    <div class="image-grid-2">
+      <div class="image-slot" style="aspect-ratio:16/9;" onclick="openLightbox('at-lab-composite_1.jpg')">
+        <img src="at-lab-composite_1.jpg" alt="AT-LAB I installation — light and participants" />
+        <span class="image-slot-label">Installation, 't Zandt — light & movement</span>
+      </div>
+      <div class="image-slot" style="aspect-ratio:16/9;" onclick="openLightbox('at-lab-composite_2.jpg')">
+        <img src="at-lab-composite_2.jpg" alt="AT-LAB I — workshop and participants" />
+        <span class="image-slot-label">Workshop & community participants</span>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <span class="stat-num">3</span>
+        <span class="stat-label">Days</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">~50</span>
+        <span class="stat-label">Participants</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">3</span>
+        <span class="stat-label">Artists</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">WP2</span>
+        <span class="stat-label">HLaS Work Package</span>
+      </div>
+    </div>
+
+    <!-- INTERACTION LAYERS -->
+    <div class="layers-grid">
+      <div class="layer-card">
+        <div class="layer-icon">◎</div>
+        <h3 class="layer-title">Arm Movement → Light & Visuals</h3>
+        <p class="layer-desc">Sensors placed on participants' arms captured movement in real time. This movement directly controlled the direction, intensity, and other parameters of the light and projected visuals — giving each participant agency over the environment through gesture.</p>
+      </div>
+      <div class="layer-card">
+        <div class="layer-icon">◉</div>
+        <h3 class="layer-title">Heartbeat → Sound</h3>
+        <p class="layer-desc">Through heartbeat sensing, participants experienced a more subtle layer of feedback in the sound and light. Their interior physiological state was made perceptible in the shared environment — the body as instrument, the heartbeat as signal.</p>
+      </div>
+      <div class="layer-card">
+        <div class="layer-icon">◈</div>
+        <h3 class="layer-title">Movement → Sound Parameters</h3>
+        <p class="layer-desc">Physical movement also controlled the sound and its parameters — participants created and shaped the sonic environment collectively, with each person's movement contributing to a shared soundscape that responded to the group in real time.</p>
+      </div>
+      <div class="layer-card">
+        <div class="layer-icon">⬡</div>
+        <h3 class="layer-title">Reflection → Research Data</h3>
+        <p class="layer-desc">After participating, visitors shared their thoughts on health sensors and their experience of interacting with technology. This qualitative data forms part of the broader HLaS research into community health, digital literacy, and the role of art in healthy living.</p>
+      </div>
+    </div>
+
+    <!-- VIDEO -->
+    <div class="video-slot">
+      <iframe
+        src="https://www.youtube.com/embed/e-XT9s4il2Y"
+        title="AT-LAB I documentation"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+        style="width:100%;height:100%;position:absolute;inset:0;">
+      </iframe>
+    </div>
+
+    <div class="text-columns">
+      <span class="col-label">Research Context</span>
+      <div class="col-content">
+        <h3>Art & Technology as<br>a Research Method for Health</h3>
+        <p>
+          AT-LAB I is part of WP2 (Sociale Mensen) of the Healthy Living as a Service (HLaS) project, a major NWO-funded research initiative led by Hanze Hogeschool in collaboration with UMCG and other partners. The project researches how to support healthy living in northern Netherlands communities, exploring the role of social connection, movement, technology, and the arts.
+        </p>
+        <p>
+          Agustín Martínez's involvement in HLaS extends across multiple activities: from the participatory AT-LAB format to presentations at international conferences (EASST/4S 2024 in Amsterdam) and the development of participatory AI design workshops such as Promptare!, presented at Placemaking Week Europe 2025 in Reggio Emilia.
+        </p>
+        <p>
+          AT-LAB I represents a model of artistic research as community intervention — not art delivered to a community, but art created with and through a community, generating knowledge about how technology is perceived, experienced, and integrated into embodied daily life.
+        </p>
+      </div>
+    </div>
+
+    <!-- SAR25 POSTER -->
+    <div style="margin-bottom:2rem;">
+      <p style="font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--warm-mid);margin-bottom:1rem;">Poster — SAR25 · 16th International Conference on Artistic Research · Faculty of Fine Arts, University of Porto · 7–9 May 2025</p>
+      <div style="width:100%;aspect-ratio:4/3;border:1px solid var(--border);overflow:hidden;margin-bottom:1rem;">
+        <iframe src="https://drive.google.com/file/d/1X6WU6pqRjwl0WAZCuY_ZavH3MMwtzHPa/preview" width="100%" height="100%" style="border:none;display:block;" allow="autoplay"></iframe>
+      </div>
+      <a href="https://www.researchcatalogue.net/view/2759372/2831091" target="_blank" style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);text-decoration:none;border:1px solid var(--accent);padding:0.4rem 1rem;display:inline-block;border-radius:2px;">View on Research Catalogue ↗</a>
+    </div>
+
+    <div class="wide-image" onclick="openLightbox('at-lab-composite_4.jpg')">
+      <img src="at-lab-composite_4.jpg" alt="AT-LAB I — build and installation process" />
+      <span style="position:absolute;bottom:1.5rem;left:1.5rem;font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--off-white);opacity:0.5;">Build & installation — Stichting Landgoed de Camping, 't Zandt</span>
+    </div>
+
+    <div class="partners-row">
+      <span class="partners-label">Partners</span>
+      <span class="partner-badge">Hanze Hogeschool Groningen</span>
+      <span class="partner-badge">HLaS / NWO</span>
+      <span class="partner-badge">Stichting Landgoed de Camping</span>
+      <span class="partner-badge">Professional Doctorate Kunst+</span>
+      <a href="https://www.hlas.nl/nieuws/art-technology-lab-in-provincie-groningen-2" target="_blank" class="partner-badge" style="border-color:var(--accent);color:var(--off-white);text-decoration:none;">Read full report ↗</a>
+    </div>
+
+  </div>
+
+  <div class="project-nav">
+    <a href="stone-nest.html">← Stone Nest</a>
+    <a href="luna.html">Next: Luna →</a>
+  </div>  <script>
+    function openLightbox(src) {
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox').classList.add('active');
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('active');
+      document.getElementById('lightbox-img').src = '';
+    }
+    document.getElementById('lightbox').addEventListener('click', function(e) {
+      if (e.target === this) closeLightbox();
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeLightbox();
+    });
+  </script>
+</body>
+</html>
